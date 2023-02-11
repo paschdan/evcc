@@ -129,7 +129,7 @@ func NewSiteFromConfig(
 
 		if serverdb.Instance != nil {
 			var err error
-			if lp.db, err = db.New(lp.Title()); err != nil {
+			if lp.db, err = db.New(lp.Title(), serverdb.Instance); err != nil {
 				return nil, err
 			}
 
