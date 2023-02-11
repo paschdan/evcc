@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/evcc-io/evcc/util/config"
 	"github.com/evcc-io/evcc/util/templates"
 	"golang.org/x/exp/slices"
 )
@@ -21,7 +22,7 @@ const (
 //go:generate go run generate.go
 
 func main() {
-	for _, class := range []templates.Class{templates.Meter, templates.Charger, templates.Vehicle} {
+	for _, class := range []config.Class{config.Meter, config.Charger, config.Vehicle} {
 		path := fmt.Sprintf("%s/%s", docsPath, class)
 		_, err := os.Stat(path)
 		if os.IsNotExist(err) {
@@ -43,7 +44,7 @@ func main() {
 	}
 }
 
-func generateClass(class templates.Class) error {
+func generateClass(class config.Class) error {
 	for _, tmpl := range templates.ByClass(class) {
 		if err := tmpl.Validate(); err != nil {
 			return err
@@ -61,7 +62,7 @@ func generateClass(class templates.Class) error {
 	return nil
 }
 
-func writeTemplate(class templates.Class, index int, product templates.Product, tmpl templates.Template) error {
+func writeTemplate(class config.Class, index int, product templates.Product, tmpl templates.Template) error {
 	values := tmpl.Defaults(templates.TemplateRenderModeDocs)
 
 	b, err := tmpl.RenderDocumentation(product, values, "de")
@@ -98,7 +99,7 @@ func sorted(keys []string) []string {
 func generateBrandJSON() error {
 	chargers := make([]string, 0)
 	smartPlugs := make([]string, 0)
-	for _, tmpl := range templates.ByClass(templates.Charger) {
+	for _, tmpl := range templates.ByClass(config.Charger) {
 		for _, product := range tmpl.Products {
 			if product.Brand != "" {
 				if tmpl.Group == "switchsockets" {
@@ -111,7 +112,7 @@ func generateBrandJSON() error {
 	}
 
 	vehicles := make([]string, 0)
-	for _, tmpl := range templates.ByClass(templates.Vehicle) {
+	for _, tmpl := range templates.ByClass(config.Vehicle) {
 		for _, product := range tmpl.Products {
 			if product.Brand != "" {
 				vehicles = append(vehicles, product.Brand)
@@ -121,7 +122,7 @@ func generateBrandJSON() error {
 
 	meters := make([]string, 0)
 	pvBattery := make([]string, 0)
-	for _, tmpl := range templates.ByClass(templates.Meter) {
+	for _, tmpl := range templates.ByClass(config.Meter) {
 		for i := range tmpl.Params {
 			if tmpl.Params[i].Name == "usage" {
 				for j := range tmpl.Params[i].Choice {

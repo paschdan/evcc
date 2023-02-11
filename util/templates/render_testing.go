@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/evcc-io/evcc/util/config"
 	"github.com/jinzhu/copier"
 	"golang.org/x/exp/slices"
 	"gopkg.in/yaml.v3"
@@ -51,7 +52,7 @@ func renderTest(t *testing.T, tmpl Template, values map[string]interface{}, cb f
 	})
 }
 
-func TestClass(t *testing.T, class Class, instantiate func(t *testing.T, values map[string]interface{})) {
+func TestClass(t *testing.T, class config.Class, instantiate func(t *testing.T, values map[string]interface{})) {
 	for _, tmpl := range ByClass(class) {
 		tmpl := tmpl
 
