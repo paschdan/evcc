@@ -141,14 +141,14 @@ func NewSiteFromConfig(
 	// grid meter
 	if site.Meters.GridMeterRef != "" {
 		var err error
-		if site.gridMeter, err = config.Meter(site.Meters.GridMeterRef); err != nil {
+		if site.gridMeter, _, err = config.Meter(site.Meters.GridMeterRef); err != nil {
 			return nil, err
 		}
 	}
 
 	// multiple pv
 	for _, ref := range append(site.Meters.PVMetersRef, site.Meters.PVMetersRef_...) {
-		pv, err := config.Meter(ref)
+		pv, _, err := config.Meter(ref)
 		if err != nil {
 			return nil, err
 		}
@@ -157,7 +157,7 @@ func NewSiteFromConfig(
 
 	// multiple batteries
 	for _, ref := range append(site.Meters.BatteryMetersRef, site.Meters.BatteryMetersRef_...) {
-		battery, err := config.Meter(ref)
+		battery, _, err := config.Meter(ref)
 		if err != nil {
 			return nil, err
 		}
@@ -166,7 +166,7 @@ func NewSiteFromConfig(
 
 	// auxiliary meters
 	for _, ref := range site.Meters.AuxMetersRef {
-		meter, err := config.Meter(ref)
+		meter, _, err := config.Meter(ref)
 		if err != nil {
 			return nil, err
 		}

@@ -221,7 +221,7 @@ func NewLoadpointFromConfig(log *util.Logger, other map[string]interface{}) (*Lo
 
 	if lp.MeterRef != "" {
 		var err error
-		if lp.chargeMeter, err = config.Meter(lp.MeterRef); err != nil {
+		if lp.chargeMeter, _, err = config.Meter(lp.MeterRef); err != nil {
 			return nil, err
 		}
 	}
@@ -229,7 +229,7 @@ func NewLoadpointFromConfig(log *util.Logger, other map[string]interface{}) (*Lo
 	// default vehicle
 	if lp.VehicleRef != "" {
 		var err error
-		if lp.defaultVehicle, err = config.Vehicle(lp.VehicleRef); err != nil {
+		if lp.defaultVehicle, _, err = config.Vehicle(lp.VehicleRef); err != nil {
 			return nil, err
 		}
 	}
@@ -243,7 +243,7 @@ func NewLoadpointFromConfig(log *util.Logger, other map[string]interface{}) (*Lo
 		return nil, errors.New("missing charger")
 	}
 	var err error
-	if lp.charger, err = config.Charger(lp.ChargerRef); err != nil {
+	if lp.charger, _, err = config.Charger(lp.ChargerRef); err != nil {
 		return nil, err
 	}
 	lp.configureChargerType(lp.charger)
