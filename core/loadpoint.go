@@ -564,7 +564,7 @@ func (lp *Loadpoint) Prepare(uiChan chan<- util.Param, pushChan chan<- push.Even
 	lp.publishTimer(pvTimer, 0, timerInactive)
 
 	// charger features
-	for _, f := range []api.Feature{api.IntegratedDevice} {
+	for _, f := range []api.Feature{api.Heating, api.IntegratedDevice} {
 		lp.publishChargerFeature(f)
 	}
 
@@ -1307,15 +1307,13 @@ func (lp *Loadpoint) socPollAllowed() bool {
 		return true
 	}
 
-	remaining := lp.Soc.Poll.Interval - lp.clock.Since(lp.socUpdated)
-
 	honourUpdateInterval := lp.Soc.Poll.Mode == pollAlways ||
 		lp.connected() && (lp.Soc.Poll.Mode == pollConnected ||
 			// for mode charging allow one last soc update if did charge previously to not rely on soc estimator too much
 			lp.Soc.Poll.Mode == pollCharging && lp.didChargeOnLastSocUpdate)
 
 	if honourUpdateInterval {
-		if remaining > 0 {
+		if remaining := lp.Soc.Poll.Interval - lp.clock.Since(lp.socUpdated); remaining > 0 {
 			lp.log.DEBUG.Printf("next soc poll remaining time: %v", remaining.Truncate(time.Second))
 		} else {
 			lp.didChargeOnLastSocUpdate = false
